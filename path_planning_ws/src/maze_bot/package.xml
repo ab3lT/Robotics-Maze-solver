@@ -4,7 +4,7 @@
   <name>maze_bot</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="noshluk2@gmail.com">luqman</maintainer>
+  <maintainer email="se.abel.tadesse@gmail.com">luqman</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
