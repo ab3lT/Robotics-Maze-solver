@@ -29,6 +29,9 @@ RUN sudo apt install -y \
     ros-${ROS_DISTRO}-gazebo-ros-pkgs \
     ros-${ROS_DISTRO}-gazebo-ros2-control
 
+# Install `joint_state_publisher_gui`
+RUN sudo apt install -y ros-${ROS_DISTRO}-joint-state-publisher-gui
+
 # Set up Gazebo environment variables
 RUN echo "export GAZEBO_MODEL_PATH=\$GAZEBO_MODEL_PATH:/usr/share/gazebo-11/models" >> ~/.bashrc && \
     echo "export GAZEBO_RESOURCE_PATH=\$GAZEBO_RESOURCE_PATH:/usr/share/gazebo-11" >> ~/.bashrc && \
