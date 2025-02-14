@@ -7,9 +7,9 @@ import cv2
 from math import pi,cos,sin
 
 from .bot_localization import bot_localizer
-# from .bot_mapping import bot_mapper
-# from .bot_pathplanning import bot_pathplanner
-# from .bot_motionplanning import bot_motionplanner
+from .bot_mapping import bot_mapper
+from .bot_pathplanning import bot_pathplanner
+from .bot_motionplanning import bot_motionplanner
 
 from nav_msgs.msg import Odometry
 
@@ -37,13 +37,13 @@ class maze_solver(Node):
         
         # Creating objects for each stage of the robot navigation
         self.bot_localizer = bot_localizer()
-        # self.bot_mapper = bot_mapper()
-        # self.bot_pathplanner = bot_pathplanner()
-        # self.bot_motionplanner = bot_motionplanner()
+        self.bot_mapper = bot_mapper()
+        self.bot_pathplanner = bot_pathplanner()
+        self.bot_motionplanner = bot_motionplanner()
 
         # Subscrbing to receive the robot pose in simulation
-        # self.pose_subscriber = self.create_subscription(Odometry,'/odom',self.bot_motionplanner.get_pose,10)
-        # self.vel_subscriber = self.create_subscription(Odometry,'/odom',self.get_bot_speed,10)
+        self.pose_subscriber = self.create_subscription(Odometry,'/odom',self.bot_motionplanner.get_pose,10)
+        self.vel_subscriber = self.create_subscription(Odometry,'/odom',self.get_bot_speed,10)
         self.bot_speed = 0
         self.bot_turning = 0
 
@@ -69,20 +69,20 @@ class maze_solver(Node):
         self.bot_localizer.localize_bot(self.sat_view, frame_disp)
 
         # [Stage 2: Mapping] (Not Implemented Yet)
-        # self.bot_mapper.graphify(self.bot_localizer.maze_og)
+        self.bot_mapper.graphify(self.bot_localizer.maze_og)
 
         # [Stage 3: PathPlanning] (Not Implemented Yet)
-        # start = self.bot_mapper.Graph.start
-        # end = self.bot_mapper.Graph.end
-        # maze = self.bot_mapper.maze
+        start = self.bot_mapper.Graph.start
+        end = self.bot_mapper.Graph.end
+        maze = self.bot_mapper.maze
 
-        # self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="dijisktra")
-        # self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="a_star")
+        self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="dijisktra")
+        self.bot_pathplanner.find_path_nd_display(self.bot_mapper.Graph.graph, start, end, maze,method="a_star")
         
         # [Stage 4: MotionPlanning] (Not Implemented Yet)
-        # bot_loc = self.bot_localizer.loc_car
-        # path = self.bot_pathplanner.path_to_goal
-        # self.bot_motionplanner.nav_path(bot_loc, path, self.vel_msg, self.velocity_publisher)
+        bot_loc = self.bot_localizer.loc_car
+        path = self.bot_pathplanner.path_to_goal
+        self.bot_motionplanner.nav_path(bot_loc, path, self.vel_msg, self.velocity_publisher)
         
         cv2.imshow("Maze (Live)", frame_disp)
         cv2.waitKey(1)
