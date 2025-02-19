@@ -53,7 +53,16 @@ RUN rosdep update
 # Source ROS setup file
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
-# Expose Gazebo ports
+# Install pygame
+RUN sudo apt install -y python3-pygame
+
+# Set dummy audio driver to prevent mixer issues
+ENV SDL_AUDIODRIVER=dummy
+
+# COPY src/maze_bot/resource/aud_chomp.mp3 /Robotics-Maze-solver/src/maze_bot/resource/
+# COPY src/maze_bot/resource/aud_intro.mp3 /Robotics-Maze-solver/src/maze_bot/resource/
+# COPY src/maze_bot/resource/aud_win.mp3 /Robotics-Maze-solver/src/maze_bot/resource/
+# # Expose Gazebo ports
 EXPOSE 11345
 
 # Default command: Launch Gazebo with ROS 2 support

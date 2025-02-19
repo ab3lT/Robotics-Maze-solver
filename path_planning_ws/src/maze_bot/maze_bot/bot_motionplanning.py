@@ -5,9 +5,12 @@ from math import pow , atan2,sqrt , degrees,asin
 from numpy import interp
 import pygame
 import os
-pygame.mixer.init()
-pygame.mixer.music.load(os.path.abspath('src/maze_bot/resource/aud_chomp.mp3'))
-
+# Set dummy audio driver for Docker
+if "DISPLAY" in os.environ:  # Check if running in a graphical environment
+    # os.environ["SDL_AUDIODRIVER"] = "dummy"  # Prevents pygame from crashing
+    pygame.mixer.init()
+    # pygame.mixer.music.load(os.path.abspath('Robotics-Maze-solver/path_planning_ws/src/maze_bot/resource/aud_chomp.mp3'))
+    pygame.mixer.music.load(os.path.abspath('path_planning_ws/src/maze_bot/resource/aud_chomp.mp3'))
 from . import config
 
 class bot_motionplanner():
