@@ -25,6 +25,7 @@ class maze_solver(Node):
         
         super().__init__("maze_solving_node")
         
+        self.bot_view = np.zeros((480, 640, 3), dtype=np.uint8)  # Assuming a 640x480 blank image
         self.velocity_publisher = self.create_publisher(Twist,'/cmd_vel',10)
         self.videofeed_subscriber = self.create_subscription(Image,'/upper_camera/image_raw',self.get_video_feed_cb,10)
         

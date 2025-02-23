@@ -61,9 +61,28 @@ class bot_localizer():
         return(cv2.morphologyEx(bin_img, cv2.MORPH_CLOSE, kernel))
     
     def extract_bg(self,frame):
+        if frame is None or frame.size == 0:
+            print("❌ Error: Received an empty frame in extract_bg")
+            return  
 
-        # a) Find Contours of all ROI's in frozen sat_view 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        print("✅ Debug: Frame shape before conversion:", frame.shape)
+
+        # Ensure frame has 3 channels (BGR)
+        if len(frame.shape) == 2:
+            print("⚠️ Warning: Frame is already grayscale, no need to convert.")
+            gray = frame  # Use as is
+        elif len(frame.shape) == 3 and frame.shape[2] == 3:
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        elif len(frame.shape) == 3 and frame.shape[2] == 1:
+            print("⚠️ Warning: Frame has 1 channel, converting to grayscale.")
+            gray = frame[:, :, 0]  # Use the single channel
+        else:
+            print("❌ Error: Unexpected frame format! Shape:", frame.shape)
+            return
+
+        print("✅ Debug: Grayscale frame shape:", gray.shape)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) if len(frame.shape) == 3 else frame
+        gray = np.uint8(gray)  # Ensure it's 8-bit
         edges = cv2.Canny(gray, 50, 150,None,3)
         # [connect_objs] => Connect disconnected edges that are close enough
         edges = self.connect_objs(edges)
@@ -152,6 +171,9 @@ class bot_localizer():
         change_gray = cv2.cvtColor(change, cv2.COLOR_BGR2GRAY)
         change_mask = cv2.threshold(change_gray, 15, 255, cv2.THRESH_BINARY)[1]
         car_mask, car_cnt = ret_largest_obj(change_mask)
+        # Fix: Handle case when no car is detected
+        if len(car_cnt) == 0:
+            return None
 
         # Step 3: Fetching the (relative) location of car.
         self.get_car_loc(car_cnt,car_mask)

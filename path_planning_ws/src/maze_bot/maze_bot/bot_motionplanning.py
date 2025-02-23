@@ -346,7 +346,7 @@ class bot_motionplanner():
                     self.goal_not_reached_flag = False
                     
                     # Play the party song, Mention that reached goal
-                    pygame.mixer.music.load(os.path.abspath('src/maze_bot/resource/Goal_reached.wav'))
+                    pygame.mixer.music.load(os.path.abspath('path_planning_ws/src/maze_bot/resource/Goal_reached.wav'))
                     pygame.mixer.music.play()
             # Still doing mini-goals?
             else:
